@@ -1,6 +1,8 @@
 import org.junit.Test;
 import wjc.example.DistributedIdGenerator;
 
+import java.text.NumberFormat;
+
 /**
  * Author: 王俊超
  * Date: 2017-11-01 08:01
@@ -12,7 +14,7 @@ public class DistributedIdGeneratorTest {
     @Test
     public void test() {
         DistributedIdGenerator generator = new DistributedIdGenerator();
-        System.out.println(Long.toBinaryString(generator.next()));
-        System.out.println(Long.toBinaryString(generator.next()));
+        System.out.println(DistributedIdGenerator.toString(generator.next()));
+        System.out.println(DistributedIdGenerator.toString(generator.next()));
     }
 }

@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * All Rights Reserved !!!
  */
 public class DistributedIdGenerator {
-    private static final byte DEFAULT = 0;
+    private static final long DEFAULT = 0;
     // 2017-01-01 00:00:00.000距1900-01-01 00:00:00毫秒数
     private static final long START = new GregorianCalendar(2017, 0, 1, 0, 0, 0).getTimeInMillis();
 
@@ -37,28 +37,28 @@ public class DistributedIdGenerator {
     /**
      * 区域编号
      */
-    private byte region = DEFAULT;
+    private long region = DEFAULT;
 
     /**
      * 应用编号
      */
 
-    private byte application = DEFAULT;
+    private long application = DEFAULT;
     /**
      * 保留位
      */
-    private byte reservation = DEFAULT;
+    private long reservation = DEFAULT;
 
     public DistributedIdGenerator() {
     }
 
-    public DistributedIdGenerator(byte region, byte application, byte reservation) {
+    public DistributedIdGenerator(long region, long application, long reservation) {
         this.region = region;
         this.application = application;
         this.reservation = reservation;
     }
 
-    public byte getRegion() {
+    public long getRegion() {
         return region;
     }
 
@@ -66,7 +66,7 @@ public class DistributedIdGenerator {
         this.region = region;
     }
 
-    public byte getApplication() {
+    public long getApplication() {
         return application;
     }
 
@@ -74,7 +74,7 @@ public class DistributedIdGenerator {
         this.application = application;
     }
 
-    public byte getReservation() {
+    public long getReservation() {
         return reservation;
     }
 
@@ -87,7 +87,7 @@ public class DistributedIdGenerator {
      *
      * @return
      */
-    private long getMillisecond() {
+    public long getMillisecond() {
         return System.currentTimeMillis() - START;
     }
 
@@ -96,7 +96,7 @@ public class DistributedIdGenerator {
      *
      * @return
      */
-    private long getNextNumber() {
+    public long getNextNumber() {
         int n = seq.incrementAndGet();
         // 在1毫秒内生成的序列号只占7位，值[0, 127]，超过要重新开始
         seq.compareAndSet(128, 0);
@@ -104,8 +104,8 @@ public class DistributedIdGenerator {
     }
 
     public long next() {
-        return getReservation() << (40 + 6 + 7 + 7)     // 保留位
-                + (getMillisecond() << (6 + 7 + 7))     // 当前距2017.01.01 00:00:00以来的毫秒数
+        return (getReservation() << (40 + 6 + 7 + 7))   // 保留位
+                + ((getMillisecond() << (6 + 7 + 7)))   // 当前距2017.01.01 00:00:00以来的毫秒数
                 + (getRegion() << (7 + 7))              // 区域编号
                 + (getApplication() << 7)               // 保留位编号
                 + getNextNumber();                      // 毫秒内的序号
@@ -120,5 +120,15 @@ public class DistributedIdGenerator {
         }
 
         return result;
+    }
+
+    public static String toString(long n) {
+        StringBuilder builder = new StringBuilder(64);
+        String s = Long.toBinaryString(n);
+        for (int i = 0; i < 64 - s.length(); i++) {
+            builder.append(0);
+        }
+        builder.append(s);
+        return builder.toString();
     }
 }
