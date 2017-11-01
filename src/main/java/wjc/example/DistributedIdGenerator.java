@@ -1,3 +1,5 @@
+package wjc.example;
+
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -101,7 +103,7 @@ public class DistributedIdGenerator {
         return n;
     }
 
-    private long next() {
+    public long next() {
         return getReservation() << (40 + 6 + 7 + 7)     // 保留位
                 + (getMillisecond() << (6 + 7 + 7))     // 当前距2017.01.01 00:00:00以来的毫秒数
                 + (getRegion() << (7 + 7))              // 区域编号
@@ -110,11 +112,13 @@ public class DistributedIdGenerator {
     }
 
 
-    private long getNext() {
-        return 0;
-    }
+    private List<Long> next(int size) {
+        List<Long> result = new ArrayList<>();
 
-    private List<Long> getNext(int size) {
-        return new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            result.add(next());
+        }
+
+        return result;
     }
 }
