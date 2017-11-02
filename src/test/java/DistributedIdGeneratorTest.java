@@ -14,7 +14,8 @@ public class DistributedIdGeneratorTest {
     @Test
     public void test() {
         DistributedIdGenerator generator = new DistributedIdGenerator();
-        System.out.println(DistributedIdGenerator.toString(generator.next()));
-        System.out.println(DistributedIdGenerator.toString(generator.next()));
+        for (int i = 0; i < 16; i++) {
+            System.out.println(DistributedIdGenerator.toString(generator.next()));
+        }
     }
 }

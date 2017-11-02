@@ -97,7 +97,7 @@ public class DistributedIdGenerator {
      * @return
      */
     public long getNextNumber() {
-        int n = seq.incrementAndGet();
+        int n = seq.getAndIncrement();
         // 在1毫秒内生成的序列号只占7位，值[0, 127]，超过要重新开始
         seq.compareAndSet(128, 0);
         return n;
